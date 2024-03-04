@@ -1,0 +1,54 @@
+.navbar {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 10px 20px;
+    display: flex;
+  }
+  
+  .navbar ul li {
+    margin-right: 20px;
+  }
+  
+  .navbar ul li a {
+    color: white;
+    text-decoration: none;
+  }
+  
+  .welcome-message {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .dashboard {
+    margin: 0 auto;
+    width: 80%;
+  }
+  
+  .dashboard h2 {
+    text-align: center;
+  }
+  
+  .dashboard table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .dashboard th, .dashboard td {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+  }
+  
+  .dashboard th {
+    background-color: #f0f0f0;
+  }
+  
+  .profile {
+    margin-left: auto;
+  }
+  
