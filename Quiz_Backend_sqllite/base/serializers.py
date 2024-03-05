@@ -19,27 +19,6 @@ class LoginSerializer(serializers.Serializer):
 
 class LogoutSerializer(serializers.Serializer):
     refresh = serializers.CharField()
-
-# class LogoutSerializer(serializers.Serializer):
-#     refresh = serializers.CharField()
-
-#     def validate(self, attrs):
-#         self.refresh_token = attrs['refresh']
-#         return attrs
-
-#     def save(self, **kwargs):
-#         try:
-#             refresh_token = RefreshToken(self.refresh_token)
-#             # Blacklist the refresh token
-#             refresh_token.blacklist()
-            
-#             # Also blacklist all related access tokens
-#             outstanding_tokens = OutstandingToken.objects.filter(token=refresh_token)
-#             for token in outstanding_tokens:
-#                 token.blacklist()
-
-#         except TokenError:
-#             raise serializers.ValidationError('Invalid refresh token')
     
 
 class GroupSerializer(serializers.ModelSerializer):
