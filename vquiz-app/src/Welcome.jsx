@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import './Welcome.css'; // Import CSS file for styling
 
 const Welcome = () => {
   const [userName, setUserName] = useState('');
   const [dashboardData, setDashboardData] = useState([]);
+  const navigate = useNavigate(); // useNavigate hook for navigation
 
   useEffect(() => {
     // Fetch user's name from the backend or from the authentication token
@@ -33,14 +35,31 @@ const Welcome = () => {
     fetchDashboardData();
   }, []);
 
+  const handleCreateGroup = () => {
+    navigate('/create-group'); // Redirect to create group page
+  };
+  const handleJoinGroup = () => {
+    navigate('/join-group'); // Redirect to create group page
+  };
+  const handleWelcome = () => {
+    navigate('/welcome'); // Redirect to create group page
+  };
+  const handleProfile = () => {
+    navigate('/Profile'); // Redirect to create group page
+  };
+  const handleMyGroups = () =>{
+    navigate('/MyGroups')
+  };
   return (
     <div>
       <nav className="navbar">
         <ul>
-          <li><a href="#">Take Quiz</a></li>
-          <li><a href="#">Create Group</a></li>
-          <li><a href="#">Join Group</a></li>
-          <li className="profile"><a href="#">Profile</a></li>
+        <li><button onClick={handleWelcome}>Home</button></li>
+        <li><button onClick={handleMyGroups}>My Groups</button></li>
+          <li><button onClick={handleCreateGroup}>Create Group</button></li>
+          {/* Add other list items as needed */}
+          <li><button onClick={handleJoinGroup}>Join Group</button></li>
+          <li className="profile"><button onClick={handleProfile}>Profile</button></li>
         </ul>
       </nav>
       <div className="welcome-message">

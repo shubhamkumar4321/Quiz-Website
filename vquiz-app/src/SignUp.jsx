@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate hook
 import './SignUp.css';
 
 function SignUp() {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Initialize useNavigate hook
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -19,33 +19,33 @@ function SignUp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (formData.password !== formData.confirmPassword) {
-      setMessage('Passwords do not match');
+      alert("Passwords do not match");
       return;
     }
 
     try {
-      const { confirmPassword, ...dataToSend } = formData; // Exclude confirmPassword from dataToSend
       const response = await fetch('http://localhost:8000/register/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(dataToSend)
+        body: JSON.stringify(formData)
       });
       const data = await response.json();
       if (response.ok) {
         setMessage('User created successfully!');
+        // Clear the form after successful submission
         setFormData({
           username: '',
           email: '',
           password: '',
           confirmPassword: ''
         });
+        // Redirect to the login page after successful sign-up
         navigate('/welcome');
       } else {
-        setMessage(data.message);
+        setMessage(data.message); // Display any error message from the server
       }
     } catch (error) {
       console.error('Error:', error);
@@ -61,7 +61,8 @@ function SignUp() {
           <span>vQuiz</span>
         </div>
         <div className="nav-buttons">
-          <button className="login-button"><Link to="/login">Login</Link></button>
+        <button className="login-button"><Link to="/login">Login</Link></button>
+          {/* Redirect to login page when clicking the Sign Up button */}
           <button className="signup-button" onClick={() => navigate('/login')}>Sign Up</button>
         </div>
       </nav>
