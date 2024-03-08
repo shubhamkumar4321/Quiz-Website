@@ -56,12 +56,10 @@ function SignUp() {
   return (
     <div>
       <nav className="navbar">
-        <div className="logo">
-          <img src="/logo.png" alt="Company Logo" />
-          <span>vQuiz</span>
+        <div> <b>vQuiz</b>
         </div>
         <div className="nav-buttons">
-        <button className="login-button"><Link to="/login">Login</Link></button>
+        <button className="login-button" onClick={()=>navigate('/')}>Login</button>
           {/* Redirect to login page when clicking the Sign Up button */}
           <button className="signup-button" onClick={() => navigate('/login')}>Sign Up</button>
         </div>

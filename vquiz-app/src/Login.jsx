@@ -9,9 +9,7 @@ const Login = () => {
   return (
     <div>
       <nav className="navbar">
-        <div className="logo">
-          <img src="/logo.png" alt="Company Logo" />
-          <span>vQuiz</span>
+        <div><b>vQuiz</b>
         </div>
         <div className="nav-buttons">
           <button className="login-button">Login</button>

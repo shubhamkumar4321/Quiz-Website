@@ -93,7 +93,7 @@ class QuizListView(APIView):
 
     def post(self, request, id):
 
-       # here id is group_id
+       # id is group_id
         group_id=id
         #  user is an admin of the group
         if not request.user.admin_of_groups.filter(id=group_id).exists():
@@ -126,10 +126,10 @@ class QuizListView(APIView):
     # permission_classes = [IsAuthenticated]
 
     def delete(self, request, id):
-        # Check if the user is an admin of the group associated with the quiz
+        # Check user is an admin of the group associated with the quiz
         try:
             quiz = Quiz.objects.get(id=id)
-            group = quiz.group  # Assuming there is a ForeignKey relation between Quiz and Group
+            group = quiz.group  #  ForeignKey relation between Quiz and Group
             if not request.user.admin_of_groups.filter(id=group.id).exists():
                 return Response({"message": "You are not authorized to delete this quiz"}, status=status.HTTP_403_FORBIDDEN)
         except Quiz.DoesNotExist:
@@ -247,19 +247,19 @@ class GroupMembershipRequestView(APIView):
     serializer_class = GroupMembershipSerializer
 
     def get(self, request, group_id):
-        # Check current user is the admin of the group
+        # current user is the admin of the group
         try:
             group = Group.objects.get(id=group_id, admin=request.user)
         except Group.DoesNotExist:
             return Response({"message": "Group not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        # Get membership requests for the group
+        # membership requests for the group
         membership_requests = GroupMembership.objects.filter(group=group, status='PENDING')
         serializer = GroupMembershipSerializer(membership_requests, many=True)
         return Response(serializer.data)
 
     def put(self, request, group_id, membership_id):
-        # Check if the current user is the admin of the group
+        #  current user is the admin of the group
         try:
             group = Group.objects.get(id=group_id, admin=request.user)
         except Group.DoesNotExist:
@@ -272,7 +272,6 @@ class GroupMembershipRequestView(APIView):
             if action == 'APPROVE':
                 membership_request.status = 'APPROVED'
                 membership_request.save()
-                # Add to group
                 group.members.add(membership_request.user)
                 return Response({"message": "Membership request approved"}, status=status.HTTP_200_OK)
             elif action == 'REJECT':
@@ -353,11 +352,10 @@ def import_questions_from_excel(request, quiz_id):
 def create_group_and_import_questions(request, group_id):
     admin = request.user
 
-    # Extract quiz details from request da
+    # Extract quiz details 
     name = request.data.get('name',"Default Quiz Name" )
 
     try:
-        # Fetch the existing group based on the provided group_id
         group = Group.objects.get(id=group_id)
     except Group.DoesNotExist:
         return Response({"message": "Group not found"}, status=status.HTTP_404_NOT_FOUND)
@@ -370,12 +368,10 @@ def create_group_and_import_questions(request, group_id):
     else:
         return Response(serializer_quiz.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # Check if the user is an admin of the created group
     if not admin.admin_of_groups.filter(id=group_id).exists():
         quiz.delete()  # Rollback quiz creation if user is not an admin
         return Response({"message": "You are not authorized to create a quiz for this group"}, status=status.HTTP_403_FORBIDDEN)
 
-    # Load questions from the Excel file into the created quiz
     try:
         workbook = openpyxl.load_workbook('base/questionsandanswers.xlsx')
         worksheet = workbook.active
@@ -387,10 +383,10 @@ def create_group_and_import_questions(request, group_id):
             if question_text is None:
                 break
 
-            # Create the question
+            #  question
             question = Question.objects.create(question=question_text, quiz=quiz)
 
-            # Create answers
+            #  answers
             for index, option in enumerate(options):
                 is_correct = True if index == correct_index else False
                 Answer.objects.create(question=question, answer=option, is_correct=is_correct)
