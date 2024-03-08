@@ -1,23 +1,28 @@
-// import logo from './logo.svg';
-// import './App.css';
-// import Login from './Login'
-import Login from './Loginn'
+import React from 'react';
+import Login from './Loginn';
+import Welcome from './Welcome';
+import * as ReactDOM from "react-dom";
+import SignUp from './SignUp';
+import { BrowserRouter, Switch, Route, Routes } from "react-router-dom";
 
-// import Welcome from './Welcome'
-import Register from './Register';
-// import Header from './Header';
-
-
-function App() {
+const App = () => {
   return (
-    <div className="App">
-     {/* <Welcome/> */}
-     {/* <Header /> */}
+    <div>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/welcome" element={<Welcome />} />
+          {/* Add routes for other options */}
+          <Route path="/SignUp" element={<SignUp />} />
 
-     {/* <Register /> */}
-     <Login />
+          <Route path="/take-quiz" element={<div>Take Quiz Page</div>} />
+          <Route path="/create-group" element={<div>Create Group Page</div>} />
+          <Route path="/join-group" element={<div>Join Group Page</div>} />
+          <Route path="/profile" element={<div>Profile Page</div>} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
-}
+};
 
 export default App;

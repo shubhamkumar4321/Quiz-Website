@@ -10,6 +10,8 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     bio = models.TextField(null=True, blank=True)
     avatar = models.ImageField(null=True, blank=True)
+    reset_password_token = models.CharField(max_length=100, null=True, blank=True)
+
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']

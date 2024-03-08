@@ -1,4 +1,5 @@
 # views.py
+from base64 import urlsafe_b64decode
 import random
 import openpyxl
 from rest_framework import status
@@ -13,7 +14,11 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 
 
-
+from django.core.mail import send_mail
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib.auth import get_user_model
 
 
 
@@ -395,3 +400,49 @@ def create_group_and_import_questions(request, group_id):
         return Response({"message": "Failed to import questions. Error: {}".format(str(e))}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     return Response({"message": "Quiz created successfully."}, status=status.HTTP_201_CREATED)
+
+
+
+
+
+
+
+
+
+
+class ForgotPasswordView(APIView):
+    def post(self, request):
+        email = request.data.get('email')
+        try:
+            user = User.objects.get(email=email)
+            # Generate and save a password reset token for the user
+            token = default_token_generator.make_token(user)
+            user.reset_password_token = token
+            user.save()
+            # Send password reset email
+            reset_link = f"http://localhost:8000/{urlsafe_base64_encode(force_bytes(user.pk))}/{token}/"
+            email_subject = 'Password Reset'
+            email_body = f'Please click the following link to reset your password: {reset_link}'
+            send_mail(email_subject, email_body, 'from@example.com', [email])
+            return Response({'message': 'Password reset instructions sent to your email'}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({'error': 'User with this email does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class ResetPasswordView(APIView):
+    def post(self, request, uidb64, token):
+        try:
+            uid = str(urlsafe_b64decode(uidb64), 'utf-8')
+
+            user = User.objects.get(pk=uid)
+            if default_token_generator.check_token(user, token):
+                new_password = request.data.get('new_password')
+                user.set_password(new_password)
+                user.reset_password_token = None  # Clear the reset token
+                user.save()
+                return Response({'message': 'Password reset successful'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'error': 'Invalid or expired token'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
